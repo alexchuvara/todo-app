@@ -16,6 +16,14 @@ export default function App() {
     setTitle("");
   }
 
+  function toggle(id) {
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+  }
+  function removeTodo(id) {
+    setTodos((prev) => prev.filter((t) => t.id !== id));
+  }
+
+
   const remaining = todos.filter((t) => !t.completed).length;
 
   return (
@@ -68,9 +76,15 @@ export default function App() {
             ) : (
               todos.map((t) => (
                 <li key={t.id} className='group flex items-center gap-3 px-4 py-3'>
-                  <input type='checkbox' className='size-5 accent-sky-500 rounded cursor-pointer' />
+                  <input
+                    type='checkbox'
+                    checked={t.completed}
+                    onChange={() => toggle(t.id)}
+                    className='size-5 accent-sky-500 rounded cursor-pointer'
+                  />
                   <span className='flex-1'>{t.title}</span>
                   <button
+                    onClick={() => removeTodo(t.id)}
                     aria-label={`Delete ${t.title}`}
                     className='opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-rose-300'
                     title='Delete'
