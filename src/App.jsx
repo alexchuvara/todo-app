@@ -3,6 +3,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { div } from 'framer-motion/client';
 
 export default function App() {
+  const [title, setTitle] = useState("");
+  const [todos, setTodos] = useState([]); // {id, title, completed}
+
+  function addTodo(e) {
+    e.preventDefault();
+    const name = title.trim();
+    if (!name) return;
+    const id =
+      crypto?.randomUUID?.() ?? `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    setTodos([{ id, title: name, completed: false }, ...todos]);
+    setTitle("");
+  }
+
+  const remaining = todos.filter((t) => !t.completed).length;
+
   return (
     <div className='min-h-screen bg-slate-950 text-slate-100 p-4'>
       <div className='max-w-xl mx-auto mt-10'>
@@ -13,13 +28,15 @@ export default function App() {
           <p className="text-slate-400">Lightweight, persistent, and animated</p>
         </header>
 
-        <form className="flex gap-2 mb-4">
+        <form onSubmit={addTodo} className="flex gap-2 mb-4">
           <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder='What needs to be done?'
             className='flex-1 rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500'
           />
           <button
-            type='button'
+            type='submit'
             className='rounded-xl px-4 py-3 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 transition'
           >
             Add
@@ -28,7 +45,7 @@ export default function App() {
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-slate-800">
-            <span className="text-sm text-slate-400">0 left</span>
+            <span className="text-sm text-slate-400">{remaining} left</span>
             <div className="flex items-center gap-1">
               {["all", "active", "completed"].map((key) => (
                 <button
@@ -46,7 +63,23 @@ export default function App() {
           </div>
 
           <ul role='list' className='divide-y divide-slate-800'>
-            <li px-4 py-3 text-slate-500>No tasks yet</li>
+            {todos.length === 0 ? (
+              <li className='px-4 py-3 text-slate-500'>No tasks yet</li>
+            ) : (
+              todos.map((t) => (
+                <li key={t.id} className='group flex items-center gap-3 px-4 py-3'>
+                  <input type='checkbox' className='size-5 accent-sky-500 rounded cursor-pointer' />
+                  <span className='flex-1'>{t.title}</span>
+                  <button
+                    aria-label={`Delete ${t.title}`}
+                    className='opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-rose-300'
+                    title='Delete'
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))
+            )}
           </ul>
         </div>
 
