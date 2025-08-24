@@ -5,6 +5,7 @@ import { div } from 'framer-motion/client';
 export default function App() {
   const [title, setTitle] = useState("");
   const [todos, setTodos] = useState([]); // {id, title, completed}
+  const [filter, setFilter] = useState("all") // all | active | completed
 
   function addTodo(e) {
     e.preventDefault();
@@ -25,6 +26,16 @@ export default function App() {
 
 
   const remaining = todos.filter((t) => !t.completed).length;
+  const filtered = useMemo(() => {
+    switch (filter) {
+      case "active":
+        return todos.filter((t) => !t.completed);
+      case "completed":
+        return todos.filter((t) => t.completed);
+      default:
+        return todos;
+    }
+  }, [todos, filter]);
 
   return (
     <div className='min-h-screen bg-slate-950 text-slate-100 p-4'>
@@ -58,7 +69,13 @@ export default function App() {
               {["all", "active", "completed"].map((key) => (
                 <button
                   key={key}
-                  className='px-3 py-1.5 rounded-full text-sm capitalize text-slate-400 hover:text-slate-200'
+                  onClick={() => setFilter(key)}
+                  className={
+                    'px-3 py-1.5 rounded-full text-sm capitalize transition' +
+                    (filter === key
+                      ? "bg-slate-800 border border-slate-700 text-sky-300"
+                      : "text-slate-400 hover:text-slate-200")
+                  }
                 >
                   {key}
                 </button>
@@ -71,10 +88,10 @@ export default function App() {
           </div>
 
           <ul role='list' className='divide-y divide-slate-800'>
-            {todos.length === 0 ? (
+            {filtered.length === 0 ? (
               <li className='px-4 py-3 text-slate-500'>No tasks yet</li>
             ) : (
-              todos.map((t) => (
+              filtered.map((t) => (
                 <li key={t.id} className='group flex items-center gap-3 px-4 py-3'>
                   <input
                     type='checkbox'
@@ -82,7 +99,9 @@ export default function App() {
                     onChange={() => toggle(t.id)}
                     className='size-5 accent-sky-500 rounded cursor-pointer'
                   />
-                  <span className='flex-1'>{t.title}</span>
+                  <span className={`flex-1 ${t.completed ? 'line-through text-slate-500' : ''}`}>
+                    {t.title}
+                  </span>
                   <button
                     onClick={() => removeTodo(t.id)}
                     aria-label={`Delete ${t.title}`}
@@ -101,6 +120,6 @@ export default function App() {
           <p>Data will persist in your browser (local storage)</p>
         </footer>
       </div>
-    </div>
+    </div >
   );
 }
