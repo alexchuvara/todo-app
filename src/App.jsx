@@ -110,31 +110,48 @@ export default function App() {
           </div>
 
           <ul role='list' className='divide-y divide-slate-800'>
-            {filtered.length === 0 ? (
-              <li className='px-4 py-3 text-slate-500'>No tasks yet</li>
-            ) : (
-              filtered.map((t) => (
-                <li key={t.id} className='group flex items-center gap-3 px-4 py-3'>
-                  <input
-                    type='checkbox'
-                    checked={t.completed}
-                    onChange={() => toggle(t.id)}
-                    className='size-5 accent-sky-500 rounded cursor-pointer'
-                  />
-                  <span className={`flex-1 ' + (t.completed ? 'line-through text-slate-500' : ''}`}>
-                    {t.title}
-                  </span>
-                  <button
-                    onClick={() => removeTodo(t.id)}
-                    aria-label={`Delete ${t.title}`}
-                    className='opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-rose-300'
-                    title='Delete'
-                  >
-                    ✕
-                  </button>
-                </li>
-              ))
-            )}
+            <AnimatePresence initial={false}>
+              {filtered.length === 0 ? (
+                <motion.li
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className='px-4 py-3 text-slate-500'
+                >
+                  No tasks yet
+                </motion.li>
+              ) : (
+                filtered.map((t) => (
+                  <motion.li
+                    key={t.id}
+                    layout
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8 }}
+                    className='group flex items-center gap-3 px-4 py-3'>
+                    <input
+                      type='checkbox'
+                      checked={t.completed}
+                      onChange={() => toggle(t.id)}
+                      className='size-5 accent-sky-500 rounded cursor-pointer'
+                    />
+                    <span className={`flex-1 ' + (t.completed ? 'line-through text-slate-500' : ''}`}>
+                      {t.title}
+                    </span>
+                    <button
+                      onClick={() => removeTodo(t.id)}
+                      aria-label={`Delete ${t.title}`}
+                      className='opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-rose-300'
+                      title='Delete'
+                    >
+                      ✕
+                    </button>
+                  </motion.li>
+                ))
+              )}
+            </AnimatePresence>
           </ul>
         </div>
 
