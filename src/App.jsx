@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { div } from 'framer-motion/client';
 
 export default function App() {
   const STORAGE_KEY = 'todo-app-v1';
+
   const [title, setTitle] = useState('');
   const [todos, setTodos] = useState(() => {
     try {
@@ -44,6 +44,7 @@ export default function App() {
   }
 
   const remaining = todos.filter((t) => !t.completed).length;
+
   const filtered = useMemo(() => {
     switch (filter) {
       case "active":
@@ -74,11 +75,13 @@ export default function App() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='What needs to be done?'
+            autoFocus
+            aria-label='Task title'
             className='flex-1 rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500'
           />
           <button
             type='submit'
-            className='rounded-xl px-4 py-3 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 transition'
+            className='rounded-xl px-4 py-3 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 focus-visible:ring-offset-slate-950 transition'
           >
             Add
           </button>
@@ -86,26 +89,42 @@ export default function App() {
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-slate-800">
-            <span className="text-sm text-slate-400">{remaining} left</span>
+            <span className="text-sm text-slate-400" aria-live='polite'>
+              {remaining} left
+            </span>
+
             <div className="flex items-center gap-1">
               {["all", "active", "completed"].map((key) => (
                 <button
                   key={key}
+                  type='button'
                   onClick={() => setFilter(key)}
-                  className={
-                    'px-3 py-1.5 rounded-full text-sm capitalize transition' +
-                    (filter === key
-                      ? "bg-slate-800 border border-slate-700 text-sky-300"
-                      : "text-slate-400 hover:text-slate-200")
-                  }
+                  aria-pressed={filter === key}
+                  className={`px-3 py-1.5 rounded-full text-sm capitalize transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${filter === key
+                    ? "bg-slate-800 border border-slate-700 text-sky-300"
+                    : "text-slate-400 hover:text-slate-200"
+                    }`}
                 >
                   {key}
                 </button>
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={toggleAll} className="text-sm text-slate-400 hover:text-slate-200">Toggle all</button>
-              <button onClick={clearCompleted} className="text-sm text-rose-300 hover:text-rose-200">Clear completed</button>
+              <button
+                type='button'
+                onClick={toggleAll}
+                className="text-sm text-slate-400 hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded"
+              >
+                Toggle all
+              </button>
+              <button
+                type='button'
+                onClick={clearCompleted}
+                disabled={!todos.some((t) => t.completed)}
+                className="text-sm text-rose-300 hover:text-rose-200 disabled:opacity-40 disabled:hover:text-rose-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 rounded"
+              >
+                Clear completed
+              </button>
             </div>
           </div>
 
@@ -137,13 +156,14 @@ export default function App() {
                       onChange={() => toggle(t.id)}
                       className='size-5 accent-sky-500 rounded cursor-pointer'
                     />
-                    <span className={`flex-1 ' + (t.completed ? 'line-through text-slate-500' : ''}`}>
+                    <span className={`flex-1 ${t.completed ? 'line-through text-slate-500' : ''}`}>
                       {t.title}
                     </span>
                     <button
+                      type='button'
                       onClick={() => removeTodo(t.id)}
                       aria-label={`Delete ${t.title}`}
-                      className='opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-rose-300'
+                      className='opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-rose-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 rounded'
                       title='Delete'
                     >
                       ✕
@@ -156,7 +176,7 @@ export default function App() {
         </div>
 
         <footer className="mt-6 text-center text-xs text-slate-500">
-          <p>Data will persist in your browser (local storage)</p>
+          <p>Data will persist in your browser (local storage).</p>
         </footer>
       </div>
     </div >
