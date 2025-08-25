@@ -3,8 +3,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { div } from 'framer-motion/client';
 
 export default function App() {
-  const [title, setTitle] = useState("");
-  const [todos, setTodos] = useState([]); // {id, title, completed}
+  const STORAGE_KEY = 'todo-app-v1';
+  const [title, setTitle] = useState('');
+  const [todos, setTodos] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }); // {id, title, completed}
   const [filter, setFilter] = useState("all") // all | active | completed
 
   function addTodo(e) {
@@ -46,6 +54,10 @@ export default function App() {
         return todos;
     }
   }, [todos, filter]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <div className='min-h-screen bg-slate-950 text-slate-100 p-4'>
