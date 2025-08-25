@@ -24,6 +24,16 @@ export default function App() {
     setTodos((prev) => prev.filter((t) => t.id !== id));
   }
 
+  function toggleAll() {
+    setTodos((prev) => {
+      const allCompleted = prev.length > 0 && prev.every((t) => t.completed);
+      return prev.map((t) => ({ ...t, completed: !allCompleted }));
+    });
+  }
+
+  function clearCompleted() {
+    setTodos((prev) => prev.filter((t) => !t.completed));
+  }
 
   const remaining = todos.filter((t) => !t.completed).length;
   const filtered = useMemo(() => {
@@ -44,7 +54,7 @@ export default function App() {
           <h1 className='text-4xl font-extrabold tracking-tight'>
             Todo<span className='text-sky-400'>List</span>
           </h1>
-          <p className="text-slate-400">Lightweight, persistent, and animated</p>
+          <p className="text-slate-400">Lightweight, persistent and animated</p>
         </header>
 
         <form onSubmit={addTodo} className="flex gap-2 mb-4">
@@ -82,8 +92,8 @@ export default function App() {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <button className="text-sm text-slate-400 hover:text-slate-200">Toggle all</button>
-              <button className="text-sm text-rose-300 hover:text-rose-200">Clear completed</button>
+              <button onClick={toggleAll} className="text-sm text-slate-400 hover:text-slate-200">Toggle all</button>
+              <button onClick={clearCompleted} className="text-sm text-rose-300 hover:text-rose-200">Clear completed</button>
             </div>
           </div>
 
@@ -99,7 +109,7 @@ export default function App() {
                     onChange={() => toggle(t.id)}
                     className='size-5 accent-sky-500 rounded cursor-pointer'
                   />
-                  <span className={`flex-1 ${t.completed ? 'line-through text-slate-500' : ''}`}>
+                  <span className={`flex-1 ' + (t.completed ? 'line-through text-slate-500' : ''}`}>
                     {t.title}
                   </span>
                   <button
