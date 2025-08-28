@@ -71,13 +71,16 @@ export default function App() {
         </header>
 
         <form onSubmit={addTodo} className="flex gap-2 mb-4">
+          <label htmlFor='new-task' className='sr-only'>Add a task</label>
           <input
+            id='new-task'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='What needs to be done?'
             autoFocus
             aria-label='Task title'
             className='flex-1 rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500'
+            onKeyDown={(e) => { if (e.key === 'Escape') setTitle(''); }}
           />
           <button
             type='submit'
