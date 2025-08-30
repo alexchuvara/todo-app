@@ -81,10 +81,13 @@ export default function App() {
             aria-label='Task title'
             className='flex-1 rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500'
             onKeyDown={(e) => { if (e.key === 'Escape') setTitle(''); }}
+            maxLength={120}
           />
           <button
             type='submit'
-            className='rounded-xl px-4 py-3 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 focus-visible:ring-offset-slate-950 transition'
+            className={`rounded-xl px-4 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 focus-visible:ring-offset-slate-950 transition
+           ${title.trim() ? "bg-sky-600 hover:bg-sky-500 active:bg-sky-700" : "bg-slate-700 opacity-60 cursor-not-allowed"}`}
+            disabled={!title.trim()}
           >
             Add
           </button>
