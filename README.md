@@ -1,37 +1,31 @@
-# React + Tailwind To‑Do App
+# TodoList — React + Tailwind + Framer Motion
 
-A clean, animated to‑do list built with **React**, **Tailwind CSS** and **Framer Motion**.  
-Tasks persist in **localStorage**. Includes filters: **All / Active / Completed**.
+A clean, animated to-do app with filters and local persistence.
+
+**Live demo:** https://todo-app-bay-nu-16.vercel.app/  
+**Tech:** React, Vite, Tailwind CSS, Framer Motion, localStorage
+
+![App screenshot](./public/screenshot.png)
+
+---
 
 ## Features
-- Add / toggle / delete tasks
-- Filters (All, Active, Completed)
-- Clear completed & Toggle all
-- Persistent data (localStorage)
-- Smooth add/remove animations (Framer Motion)
-- Accessible controls & keyboard-friendly
 
-## Tech Stack
-- React (Vite)
-- Tailwind CSS
-- Framer Motion
+- Add / toggle / delete tasks  
+- Filters: **All / Active / Completed**  
+- **Toggle all** & **Clear completed**  
+- Smooth enter/exit and layout animations (Framer Motion)  
+- Accessible controls (keyboard-friendly, `aria-*`, focus-visible)  
+- Polished dark UI (Tailwind)
+
+---
 
 ## Getting Started
 
 **Prerequisites**
-- Node.js ≥ 18 (LTS recommended)
-- npm (or pnpm / yarn)
+- Node.js ≥ 18
 
 **Run locally**
 ```bash
-# install deps
 npm i
-# start dev server
 npm run dev
-
-## Deployment
-
-### Vercel
-- Framework: Vite
-- Build: `npm run build`
-- Output: `dist`
